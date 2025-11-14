@@ -1,8 +1,8 @@
-import DoctorsFactory from "../models/DAO/Dao.factory.clases.js"
+﻿import DaoFactory from "../models/DAO/Dao.factory.clases.js";
 
 class DoctorsService {
-  constructor() {
-    this.model = DoctorsFactory.create(process.env.PERSISTENCE);
+  constructor(persistence = process.env.PERSISTENCE) {
+    this.model = DaoFactory.get("Doctor", persistence);
   }
 
   getDoctors = async () => {
@@ -10,11 +10,10 @@ class DoctorsService {
     return doctors;
   }
 
-  postDoctors = async (doc) =>{
+  postDoctors = async (doc) => {
     const doctors = await this.model.postDoctors(doc);
     return doctors;
   }
-
 }
 
 export default DoctorsService;

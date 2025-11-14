@@ -38,17 +38,17 @@ const doctorsSchema = mongoose.Schema({
     },
 })
 
-const DoctorsModel = mongoose.model('DoctorsModel', doctorsSchema)
+const DoctorModel = mongoose.model('DoctorModel', doctorsSchema)
 
 
-class DoctorsDAO  {
+class Doctor  {
   constructor() {
     this.collection = "doctors";
   }
 
   getDoctors = async () => {
     try {
-      return await DoctorsModel.find();
+      return await DoctorModel.find();
     } catch (error) {
       console.error("Error al obtener doctores:", error);
       throw error;
@@ -56,11 +56,11 @@ class DoctorsDAO  {
   };
 
     postDoctors = async (doc) => {
-        const doctor = new DoctorsModel(doc)
+        const doctor = new DoctorModel(doc)
         const data = await doctor.save()
         return data; 
   };
 
 }
 
-export default DoctorsDAO;
+export default Doctor;
