@@ -60,6 +60,55 @@ class Doctor  {
     }
   };
 
+  getDoctorsWithStats = async () => {
+    try {
+        const docs = await DoctorModel.find().populate({
+        path: 'scheduleTemplate',
+        populate: { path: 'appointments' }
+      });
+
+      const processedDoctors = docs.map(doc => {
+        const d = doc.toObject();
+        const template = d.scheduleTemplate;
+
+        let totalAppointments = 0;
+        let agendaStatus = "Sin agenda";
+
+        if (template) {
+          if (template.status === "INACTIVO") {
+            agendaStatus = "Inactiva";
+          } else {
+            const occupiedSlots = template.appointments.filter(
+              app => app.status !== "LIBRE"
+            );
+            totalAppointments = occupiedSlots.length;
+
+            
+            const hasFreeSlots = template.appointments.some(
+              app => app.status === "LIBRE"
+            );
+            
+           
+            agendaStatus = hasFreeSlots ? "Disponible" : "Completa";
+          }
+        }
+
+      
+        return {
+          ...d,
+          totalAppointments, 
+          agendaStatus      
+        };
+      });
+
+      return processedDoctors;
+
+    } catch (error) {
+      console.error("Error fetching doctors with stats:", error);
+      throw error;
+    }
+  };
+
     postDoctors = async (doc) => {
         const doctor = new DoctorModel(doc)
         const data = await doctor.save()

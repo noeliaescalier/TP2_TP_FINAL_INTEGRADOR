@@ -10,6 +10,11 @@ class DoctorsService {
     return doctors;
   }
 
+  getDoctorsWithStats = async () => {
+    const doctors = await this.model.getDoctorsWithStats();
+    return doctors;
+  }
+
   postDoctors = async (doc) => {
     const doctors = await this.model.postDoctors(doc);
     return doctors;

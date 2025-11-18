@@ -9,6 +9,7 @@ class AppointmentsRoutes {
 
   start() {
     this.router.get("/appointments", this.controller.getAppointments);
+    this.router.get("/appointments/stats/dashboard", this.controller.getStats);
     this.router.post("/appointments", this.controller.postAppointments);
 
     return this.router;

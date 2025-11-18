@@ -59,6 +59,22 @@ class Appointment  {
     }
   };
 
+  getAppointmentsReserved = async () => {
+    return await AppointmentModel.countDocuments({ status: "RESERVADO" });
+  };
+
+  getAppointmentsCancelled = async () => {
+    return await AppointmentModel.countDocuments({ 
+      status: { $in: ["CANCELADO_PACIENTE", "CANCELADO_MEDICO"] } 
+    });
+  };
+
+  getAppointmentsAttended = async () => {
+    return await AppointmentModel.countDocuments({ status: "ATENDIDO" });
+  };
+
+ 
+
     postAppointment = async (app) => {
         const appointment = new AppointmentModel(app)
         const data = await appointment.save()

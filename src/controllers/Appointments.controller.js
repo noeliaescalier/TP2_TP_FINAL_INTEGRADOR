@@ -10,6 +10,15 @@ class AppointmentsController {
     res.send(appointments);
   }
 
+  getStats = async (req, res) => {
+    try {
+      const stats = await this.service.getAppointmentsStats();
+      res.status(200).json(stats);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  }
+
   postAppointments = async (req, res) => {
     const appointment = req.body;
     const data = await this.service.postAppointments(appointment);

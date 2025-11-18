@@ -10,6 +10,11 @@ class DoctorsController {
     res.send(doctors);
   }
 
+  getDoctorsWithStats = async (req, res) => {
+    const doctors = await this.service.getDoctorsWithStats();
+    res.send(doctors);
+  }
+
     postDoctors = async (req, res) => {
     const doc = req.body;
     const data = await this.service.postDoctors(doc);

@@ -60,6 +60,28 @@ class User  {
     }
   };
 
+  getNewPatients = async (start, end) => {
+    try {
+      const count = await UserModel.countDocuments({
+        role: "PACIENTE",
+        createdAt: { $gte: start, $lte: end } 
+      });
+      return count;
+    } catch (error) {
+      console.error("Error contando pacientes nuevos:", error);
+      throw error;
+    }
+  };
+
+  getTotalPatients = async () => {
+    try {
+      return await UserModel.countDocuments({ role: "PACIENTE" });
+    } catch (error) {
+      console.error("Error al contar total de pacientes:", error);
+      throw error;
+    }
+  };
+
     postUser = async (us) => {
         const user = new UserModel(us)
         const data = await user.save()

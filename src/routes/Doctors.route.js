@@ -9,6 +9,7 @@ class DoctorsRoutes {
 
   start() {
     this.router.get("/doctors", this.controller.getDoctors);
+    this.router.get("/doctors/stats", this.controller.getDoctorsWithStats);
     this.router.post("/doctors", this.controller.postDoctors);
 
     return this.router;
