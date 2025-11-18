@@ -9,7 +9,9 @@ class ScheduleTemplatesRoutes {
 
   start() {
     this.router.get("/schedule-templates", this.controller.getScheduleTemplates);
+    //this.router.get("/schedule-templates/:id", this.controller.getScheduleById); 
     this.router.post("/schedule-templates", this.controller.postScheduleTemplates);
+    //this.router.patch("/schedule-templates/:id", this.controller.patchScheduleTemplates);
 
     return this.router;
   }

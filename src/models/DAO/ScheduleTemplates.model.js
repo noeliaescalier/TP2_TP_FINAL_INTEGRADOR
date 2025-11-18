@@ -6,8 +6,8 @@ const scheduleTemplateSchema = new mongoose.Schema({
     ref: "DoctorModel",
     required: true
   },
-  dayOfWeek: {
-    type: Number,
+  daysOfWeek: {
+    type: [Number],
     required: true
   },
   startTime: {
@@ -24,17 +24,16 @@ const scheduleTemplateSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  validFrom: {
-    type: Date
-  },
-  validTo: {
-    type: Date
-  },
   status: {
     type: String,
     enum: ["ACTIVO", "INACTIVO"],
     default: "ACTIVO"
+  },
+  appointments: [{
+    type: mongoose.Schema.Types.ObjectId,
+     ref: "AppointmentModel"
   }
+ ]
 });
 
 const ScheduleTemplateModel = mongoose.model("ScheduleTemplateModel", scheduleTemplateSchema);
@@ -49,17 +48,40 @@ class ScheduleTemplate  {
     try {
       return await ScheduleTemplateModel.find();
     } catch (error) {
-      console.error("Error al obtener la agenda de turnos:", error);
+      console.error("Error al obtener el schedule de :appointments", error);
       throw error;
     }
-  };
+  }
 
     postScheduleTemplate = async (stp) => {
         const st = new ScheduleTemplateModel(stp)
         const data = await st.save()
         return data; 
+  }
+
+    patchScheduleTemplate = async (id, stp) => {
+    try {
+      const updated = await ScheduleTemplateModel.findByIdAndUpdate(
+        id,
+        { $set: stp },
+        { new: true }
+      );
+      return updated;
+    } catch (error) {
+      console.error("Error al actualizar el schedule de appointments:", error);
+      throw error;
+    }
   };
 
+
+  /*
+  getScheduleById= async (id) => {
+      const schedule = await ScheduleTemplateModel.findById(id);
+      return schedule;
+  };
+*/
+
 }
+
 
 export default ScheduleTemplate;

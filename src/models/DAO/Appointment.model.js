@@ -11,17 +11,8 @@ const appointmentSchema = new mongoose.Schema({
     ref: "UserModel", // User con role = "PACIENTE"
     default: null
   },
-  scheduleTemplate: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "ScheduleTemplateModel",
-    default: null
-  },
-  startDateTime: {
-    type: Date,
-    required: true
-  },
-  endDateTime: {
-    type: Date,
+  time: {
+    type: String,
     required: true
   },
   status: {
@@ -37,11 +28,7 @@ const appointmentSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+    default: null
   },
   cancellationReason: {
     type: String,
@@ -49,11 +36,12 @@ const appointmentSchema = new mongoose.Schema({
   }
 });
 
+/*
 appointmentSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();
 });
-
+*/
 const AppointmentModel = mongoose.model("AppointmentModel", appointmentSchema);
 
 
