@@ -19,6 +19,15 @@ class UsersController {
     }
   }
 
+  getTotalPatients = async (req, res) => {
+    try {
+      const count = await this.service.getTotalPatients();
+      res.status(200).json({ totalPatients: count });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  }
+
 
 
 

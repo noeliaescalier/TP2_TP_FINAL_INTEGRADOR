@@ -10,6 +10,7 @@ class UsersRoutes {
   start() {
     this.router.get("/users", this.controller.getUsers);
     this.router.get("/users/stats/new", this.controller.getNewPatientsStats);
+    this.router.get("/users/stats/total", this.controller.getTotalPatients);
     this.router.post("/users", this.controller.postUsers);
 
     return this.router;

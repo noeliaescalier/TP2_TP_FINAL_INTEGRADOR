@@ -18,6 +18,10 @@ class UsersService {
     return await this.model.getNewPatients(start, end);
   }
 
+  getTotalPatients = async () => {
+    return await this.model.getTotalPatients();
+  }
+
  
 
   postUsers = async (user) => {
