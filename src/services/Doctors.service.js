@@ -19,6 +19,21 @@ class DoctorsService {
     const doctors = await this.model.postDoctors(doc);
     return doctors;
   }
+
+  deleteDoctors = async (id) => {
+    const result = await this.model.deleteDoctors(id);
+    return result;
+  }
+
+  patchDoctors = async (id, docData) => {
+    const updatedDoc = await this.model.patchDoctors(id, docData);
+    return updatedDoc;
+  }
+
+  putDoctors = async (id, docData) => {
+    const updatedDoc = await this.model.putDoctors(id, docData);
+    return updatedDoc;
+  }
 }
 
 export default DoctorsService;

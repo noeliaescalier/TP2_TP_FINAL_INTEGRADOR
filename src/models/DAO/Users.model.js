@@ -51,7 +51,7 @@ class User  {
     this.collection = "users";
   }
 
-  getUser = async () => {
+  getUsers = async () => {
     try {
       return await UserModel.find();
     } catch (error) {
@@ -82,10 +82,53 @@ class User  {
     }
   };
 
-    postUser = async (us) => {
-        const user = new UserModel(us)
-        const data = await user.save()
-        return data; 
+  postUser = async (userData) => {
+    try {
+      const user = new UserModel(userData);
+      const savedUser = await user.save();
+      return savedUser;
+    } catch (error) {
+      console.error("Error al crear usuario:", error);
+      throw error;
+    }
+  };
+
+  deleteUser = async (id) => {
+    try {
+      const result = await UserModel.findByIdAndDelete(id);
+      return result;
+    } catch (error) {
+      console.error("Error al eliminar usuario:", error);
+      throw error;
+    }
+  };
+
+  patchUser = async (id, userData) => {
+    try {
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        id,
+        { $set: userData },
+        { new: true }
+      );
+      return updatedUser;
+    } catch (error) {
+      console.error("Error al actualizar usuario:", error);
+      throw error;
+    }
+  };
+
+  putUser = async (id, userData) => {
+    try {
+      const updatedUser = await UserModel.findByIdAndUpdate(      
+        id,
+        { $set: userData },
+        { new: true }
+      );
+      return updatedUser;
+    } catch (error) {
+      console.error("Error al reemplazar usuario:", error);
+      throw error;
+    }
   };
 
 }

@@ -50,7 +50,7 @@ class Appointment  {
     this.collection = "appointment";
   }
 
-  getAppointment = async () => {
+  getAppointments = async () => {
     try {
       return await AppointmentModel.find();
     } catch (error) {
@@ -60,26 +60,82 @@ class Appointment  {
   };
 
   getAppointmentsReserved = async () => {
-    return await AppointmentModel.countDocuments({ status: "RESERVADO" });
+    try {
+      return await AppointmentModel.find({ status: "RESERVADO" });
+    } catch (error) {
+      console.error("Error al obtener turnos reservados:", error);
+      throw error;
+    }
   };
 
+
   getAppointmentsCancelled = async () => {
-    return await AppointmentModel.countDocuments({ 
-      status: { $in: ["CANCELADO_PACIENTE", "CANCELADO_MEDICO"] } 
-    });
+    try {
+      return await AppointmentModel.find({ 
+        status: { $in: ["CANCELADO_PACIENTE", "CANCELADO_MEDICO"] } 
+      });
+    } catch (error) {
+      console.error("Error al obtener turnos cancelados:", error);
+      throw error;
+    }
   };
 
   getAppointmentsAttended = async () => {
-    return await AppointmentModel.countDocuments({ status: "ATENDIDO" });
+    try {
+      return await AppointmentModel.find({ status: "ATENDIDO" });
+    } catch (error) {
+      console.error("Error al obtener turnos atendidos:", error);
+      throw error;
+    }
+  };
+  
+
+  postAppointment = async (appointmentData) => {
+   try {
+      const newAppointment = new AppointmentModel(appointmentData);
+      return await newAppointment.save();
+    } catch (error) {
+      console.error("Error al crear el turno:", error);
+      throw error;
+    }
   };
 
- 
-
-    postAppointment = async (app) => {
-        const appointment = new AppointmentModel(app)
-        const data = await appointment.save()
-        return data; 
+  putAppointment = async (appointmentId, updateData) => {
+    try {
+      return await AppointmentModel.findByIdAndUpdate(
+        appointmentId,
+        updateData,
+        { new: true }
+      );
+    } catch (error) {
+      console.error("Error al actualizar el turno:", error);
+      throw error;
+    }
   };
+
+  deleteAppointment = async (appointmentId) => {
+    try {
+      return await AppointmentModel.findByIdAndDelete(appointmentId);
+    } catch (error) {
+      console.error("Error al eliminar el turno:", error);
+      throw error;
+    }
+  };
+
+  patchAppointment = async (appointmentId, patchData) => {
+    try {
+      return await AppointmentModel.findByIdAndUpdate(
+        appointmentId,
+        { $set: patchData },
+        { new: true }
+      );
+    } catch (error) {
+      console.error("Error al modificar el turno:", error);
+      throw error;
+    }
+  };
+
+
 
 }
 

@@ -82,6 +82,26 @@ class ScheduleTemplatesService {
 
     return createdSchedule;
   };
+
+  patchScheduleTemplate = async (id, scheduleTemplateData) => {
+    const updatedScheduleTemplate = await this.model.patchScheduleTemplate(id, scheduleTemplateData);
+    return updatedScheduleTemplate;
+  };
+
+  putScheduleTemplate = async (id, scheduleTemplateData) => {
+    const updatedScheduleTemplate = await this.model.putScheduleTemplate(id, scheduleTemplateData);
+    return updatedScheduleTemplate;
+  };
+
+  getScheduleTemplatesByDoctor = async (doctorId) => {
+    const scheduleTemplates = await this.model.getScheduleTemplatesByDoctor(doctorId);
+    return scheduleTemplates;
+  };
+
+  deleteScheduleTemplate = async (id) => {
+    const deletedScheduleTemplate = await this.model.deleteScheduleTemplate(id);
+    return deletedScheduleTemplate;
+  };
 }
 
 export default ScheduleTemplatesService;

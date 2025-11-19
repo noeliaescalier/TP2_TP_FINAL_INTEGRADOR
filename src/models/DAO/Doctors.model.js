@@ -109,11 +109,55 @@ class Doctor  {
     }
   };
 
-    postDoctors = async (doc) => {
-        const doctor = new DoctorModel(doc)
-        const data = await doctor.save()
-        return data; 
+   postDoctor = async (doctorData) => {
+    try {
+      const doctor = new DoctorModel(doctorData);
+      const savedDoctor = await doctor.save();
+      return savedDoctor;
+    } catch (error) {
+      console.error("Error al crear doctor:", error);
+      throw error;
+    }
   };
+
+  deleteDoctor = async (id) => {
+    try {
+      const result = await DoctorModel.findByIdAndDelete(id);
+      return result;
+    } catch (error) {
+      console.error("Error al eliminar doctor:", error);
+      throw error;
+    }
+  };
+  patchDoctor = async (id, doctorData) => {
+    try {
+      const updatedDoctor = await DoctorModel.findByIdAndUpdate(
+        id,
+        { $set: doctorData },
+        { new: true }
+      );
+      return updatedDoctor;
+    } catch (error) {
+      console.error("Error al actualizar doctor:", error);
+      throw error;
+    } 
+  };
+
+  putDoctor = async (id, doctorData) => {
+    try {
+      const updatedDoctor = await DoctorModel.findByIdAndUpdate(
+        id,
+        { $set: doctorData },
+        { new: true }
+      );
+      return updatedDoctor;
+    } catch (error) {
+      console.error("Error al reemplazar doctor:", error);
+      throw error;
+    }
+  };
+
+
 
 }
 

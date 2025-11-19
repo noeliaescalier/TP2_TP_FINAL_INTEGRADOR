@@ -6,7 +6,7 @@ class UsersService {
   }
 
   getUsers = async () => {
-    const users = await this.model.getUser();
+    const users = await this.model.getUsers();
     return users;
   }
 
@@ -15,18 +15,33 @@ class UsersService {
     const start = new Date(); start.setHours(0,0,0,0);
     const end = new Date(); end.setHours(23,59,59,999);
       
-    return await this.model.getNewPatients(start, end);
+    const patientsToday = this.model.getNewPatients(start, end);
+    return patientsToday;
   }
 
   getTotalPatients = async () => {
-    return await this.model.getTotalPatients();
+    const patients = await this.model.getTotalPatients();
+    return patients;
   }
 
- 
-
-  postUsers = async (user) => {
+   postUsers = async (user) => {
     const created = await this.model.postUser(user);
     return created;
+  }
+
+  deleteUsers = async (id) => {
+    const result = await this.model.deleteUser(id);
+    return result;
+  }
+
+  patchUsers = async (id, userData) => {
+    const updated = await this.model.patchUser(id, userData);
+    return updated;
+  }
+
+  putUsers = async (id, userData) => {
+    const updated = await this.model.putUser(id, userData);
+    return updated;
   }
 }
 

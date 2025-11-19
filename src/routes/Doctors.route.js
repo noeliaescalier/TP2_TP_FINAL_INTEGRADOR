@@ -1,5 +1,6 @@
 import express from "express";
 import DoctorsController from "../controllers/Doctors.controller.js";
+import validationMiddleware from "../middleware/validation.middleware.js";
 
 class DoctorsRoutes {
   constructor() {
@@ -10,7 +11,10 @@ class DoctorsRoutes {
   start() {
     this.router.get("/doctors", this.controller.getDoctors);
     this.router.get("/doctors/stats", this.controller.getDoctorsWithStats);
-    this.router.post("/doctors", this.controller.postDoctors);
+    this.router.post("/doctors", validationMiddleware.validateRequiredFields(["firstName", "lastName", "specialty", "province", "neighborhood"]), this.controller.postDoctors);
+    this.router.delete("/doctors/:id", validationMiddleware.validateId, this.controller.deleteDoctors);
+    this.router.patch("/doctors/:id", validationMiddleware.validateId, this.controller.patchDoctors);
+    this.router.put("/doctors/:id", validationMiddleware.validateId, this.controller.putDoctors);
 
     return this.router;
   }
