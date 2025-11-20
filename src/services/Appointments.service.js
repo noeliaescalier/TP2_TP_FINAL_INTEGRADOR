@@ -1,5 +1,5 @@
 import DaoFactory from "../models/DAO/Dao.factory.clases.js";
-import { sendEmail } from "./email.service.js";
+import { sendEmail } from "./Email.service.js";
 
 class AppointmentsService {
   constructor(persistence = process.env.PERSISTENCE) {
