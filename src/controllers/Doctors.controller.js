@@ -77,6 +77,19 @@ class DoctorsController {
     }
   }
 
+  getDoctorById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const doctor = await this.service.getDoctorById(id);
+      if (doctor) {
+        res.status(200).json(doctor);
+      } else {
+        res.status(404).json({ message: "Doctor no encontrado" });
+      }
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  }
 
 }
 

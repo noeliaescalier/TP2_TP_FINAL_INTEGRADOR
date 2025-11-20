@@ -85,6 +85,20 @@ deleteUsers = async (req, res) => {
       res.status(500).send({ error: error.message });
     }
   }
+
+  getUserById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await this.service.getUserById(id);
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: "Usuario no encontrado" });
+      }
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  }
 }
 
 export default UsersController;

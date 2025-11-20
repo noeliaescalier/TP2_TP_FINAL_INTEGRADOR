@@ -34,6 +34,13 @@ class DoctorsService {
     const updatedDoc = await this.model.putDoctors(id, docData);
     return updatedDoc;
   }
+
+
+getDoctorById = async (id) => {
+    const doctor = await this.model.getDoctorById(id);
+    return doctor;
+  }
+
 }
 
 export default DoctorsService;

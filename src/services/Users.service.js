@@ -43,6 +43,11 @@ class UsersService {
     const updated = await this.model.putUser(id, userData);
     return updated;
   }
+
+  getUserById = async (id) => {
+    const user = await this.model.getUserById(id);
+    return user;
+  }
 }
 
 export default UsersService;
