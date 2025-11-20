@@ -30,10 +30,6 @@ class AppointmentsService {
     };
   }
 
-  postAppointments = async (appointment) => {
-    const created = await this.model.postAppointment(appointment);
-    return created;
-  }
 
   getAppointmentsReserved = async () => {
     const appointments = await this.model.getAppointmentsReserved();
@@ -54,8 +50,8 @@ class AppointmentsService {
     const newAppointment = await this.model.postAppointment(appointmentData);
      try {
         
-        const patient = await this.userDao.getUserById(appointmentData.patient);
-        const doctor = await this.doctorDao.getDoctorById(appointmentData.doctor);
+        const patient = await this.user.getUserById(appointmentData.patient);
+        const doctor = await this.doctor.getDoctorById(appointmentData.doctor);
 
         if (patient && patient.email) {
             const subject = "Turni: Confirmación de Reserva";
@@ -115,5 +111,5 @@ class AppointmentsService {
   }
 
   }
-  
+
 export default AppointmentsService;
