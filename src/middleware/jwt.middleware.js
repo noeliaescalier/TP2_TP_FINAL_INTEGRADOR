@@ -1,0 +1,40 @@
+import jwt from "jsonwebtoken";
+
+// Solo con fines educativos: mover a .env
+const SECRET = process.env.JWT_SECRET || "clave_ultra_secreta";
+
+const generateToken = async (user) => {
+  const payload = {
+    sub: user?._id || user?.id,
+    email: user?.email,
+    role: user?.role,
+  };
+
+  const token = await jwt.sign(payload, SECRET, { expiresIn: "2m" });
+  return token;
+};
+
+const validateToken = async (req, res, next) => {
+  const tkn = req.headers.authorization;
+  if (!tkn) {
+    return res.status(401).json({ error: "No autorizado: token requerido" });
+  }
+
+  const splitBearer = tkn.split(" ")[1];
+  if (!splitBearer) {
+    return res.status(401).json({ error: "Formato de token inválido" });
+  }
+
+  try {
+    const validation = await jwt.verify(splitBearer, SECRET);
+    req.user = validation;
+    return next();
+  } catch (error) {
+    return res.status(401).json({ error: "Token inválido o expirado" });
+  }
+};
+
+export default {
+  generateToken,
+  validateToken,
+};
