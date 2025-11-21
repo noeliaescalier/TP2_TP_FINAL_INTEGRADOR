@@ -13,14 +13,13 @@ class AppointmentsService {
     return appointments;
   }
 
-  getAppointmentsStats = async () => {
+  getAppointmentsCountByStatus = async () => {
 
     
     const [reserved, cancelled, attended] = await Promise.all([
-        this.model.getAppointmentsReserved(),
-        this.model.getAppointmentsCancelled(),
-        this.model.getAppointmentsAttended(),
-  
+        this.model.getAppointmentsCountByStatus(["RESERVADO"]),
+        this.model.getAppointmentsCountByStatus(["CANCELADO_PACIENTE", "CANCELADO_MEDICO"]),
+        this.model.getAppointmentsCountByStatus(["ATENDIDO"]),
         
     ]);
 
@@ -34,20 +33,6 @@ class AppointmentsService {
   }
 
 
-  getAppointmentsReserved = async () => {
-    const appointments = await this.model.getAppointmentsReserved();
-    return appointments;
-  }
-
-  getAppointmentsCancelled = async () => {
-    const appointments = await this.model.getAppointmentsCancelled();
-    return appointments;
-  }
-
-  getAppointmentsAttended = async () => {
-    const appointments = await this.model.getAppointmentsAttended();
-    return appointments;
-  }
 
   postAppointment = async (appointmentData) => {
     const newAppointment = await this.model.postAppointment(appointmentData);
@@ -113,6 +98,11 @@ class AppointmentsService {
     return updatedAppointment;
   }
 
+  deleteAppointment = async (id) => {
+    const deleted = await this.model.deleteAppointment(id);
+    return deleted;
+
   }
+}
 
 export default AppointmentsService;
