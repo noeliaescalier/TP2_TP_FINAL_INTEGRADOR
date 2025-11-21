@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 // Solo con fines educativos: mover a .env
-const SECRET = process.env.JWT_SECRET || "clave_ultra_secreta";
+const SECRET = process.env.JWT_SECRET;
 
 const generateToken = async (user) => {
   const payload = {
@@ -10,7 +10,7 @@ const generateToken = async (user) => {
     role: user?.role,
   };
 
-  const token = await jwt.sign(payload, SECRET, { expiresIn: "2m" });
+  const token = await jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
   return token;
 };
 
@@ -26,7 +26,7 @@ const validateToken = async (req, res, next) => {
   }
 
   try {
-    const validation = await jwt.verify(splitBearer, SECRET);
+    const validation = await jwt.verify(splitBearer, process.env.JWT_SECRET);
     req.user = validation;
     return next();
   } catch (error) {
