@@ -6,7 +6,7 @@ class AppointmentsService {
   }
 
   getAppointments = async () => {
-    const appointments = await this.model.getAppointment();
+    const appointments = await this.model.getAppointments();
     return appointments;
   }
 

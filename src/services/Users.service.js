@@ -43,6 +43,11 @@ class UsersService {
     const updated = await this.model.putUser(id, userData);
     return updated;
   }
+
+  getUserByEmail = async (email) => {
+    const user = await this.model.getUserByEmail(email);
+    return user;
+  }
 }
 
 export default UsersService;
