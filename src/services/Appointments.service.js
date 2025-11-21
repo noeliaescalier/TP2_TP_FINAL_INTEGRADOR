@@ -14,11 +14,13 @@ class AppointmentsService {
   }
 
   getAppointmentsStats = async () => {
+
     
     const [reserved, cancelled, attended] = await Promise.all([
         this.model.getAppointmentsReserved(),
         this.model.getAppointmentsCancelled(),
         this.model.getAppointmentsAttended(),
+  
         
     ]);
 
@@ -26,7 +28,8 @@ class AppointmentsService {
         patientsToday: reserved,
         appointmentsCancelled: cancelled,
         patientsAttended: attended,
-        totalSlots: reserved + cancelled + attended
+        totalSlots: reserved + cancelled + attended,
+        
     };
   }
 
