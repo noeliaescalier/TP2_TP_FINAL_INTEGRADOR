@@ -102,6 +102,8 @@ class ScheduleTemplatesService {
     const deletedScheduleTemplate = await this.model.deleteScheduleTemplate(id);
     return deletedScheduleTemplate;
   };
+
+ 
 }
 
 export default ScheduleTemplatesService;

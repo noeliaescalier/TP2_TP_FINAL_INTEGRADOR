@@ -1,9 +1,38 @@
 import ScheduleTemplatesService from "../services/ScheduleTemplates.service.js";
+import LoginService from "../services/Login.service.js";
+import authMiddleware from "../middleware/jwt.middleware.js";
+
 
 class ScheduleTemplatesController {
   constructor() {
     this.service = new ScheduleTemplatesService();
   }
+
+  postLogin = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await LoginService.loginUser(email, password);
+      if (user) {
+        const token = authMiddleware.generateToken({ user: user.email, role: user.role });
+        res.status(200).json({
+          status: 'success',
+          data: { user, token }
+        });
+      } else {
+        res.status(401).json({ 
+          status: 'error',
+          message: 'Invalid credentials (user not found or wrong password)'
+         });
+      }
+    } catch (error) {
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
+    }
+
+  }
+
 
  getScheduleTemplates = async (req, res) => {
     try {

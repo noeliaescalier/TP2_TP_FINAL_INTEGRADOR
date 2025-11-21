@@ -5,6 +5,8 @@ class UsersController {
     this.service = new UsersService();
   }
 
+  
+
 getUsers = async (req, res) => {
     try {
       const users = await this.service.getUsers();
@@ -160,5 +162,6 @@ deleteUsers = async (req, res) => {
     }
   }
 }
+
 
 export default UsersController;

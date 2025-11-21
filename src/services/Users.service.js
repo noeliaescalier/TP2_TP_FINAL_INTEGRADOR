@@ -48,6 +48,8 @@ class UsersService {
     const user = await this.model.getUserById(id);
     return user;
   }
+
+  
 }
 
 export default UsersService;

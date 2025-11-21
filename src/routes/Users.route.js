@@ -2,6 +2,7 @@ import express from "express";
 import UsersController from "../controllers/Users.controller.js";
 import validationMiddleware from "../middleware/validation.middleware.js";
 
+
 class UsersRoutes {
   constructor() {
     this.router = express.Router();
@@ -9,6 +10,7 @@ class UsersRoutes {
   }
 
   start() {
+   
     this.router.get("/users", this.controller.getUsers);
     this.router.get("/users/stats/new", this.controller.getNewPatientsStats);
     this.router.get("/users/stats/total", this.controller.getTotalPatients);

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -84,9 +85,14 @@ class User  {
 
   postUser = async (userData) => {
     try {
-      const user = new UserModel(userData);
-      const savedUser = await user.save();
-      return savedUser;
+    if (userData.password) {
+        const salt = await bcrypt.genSalt(10);
+        userData.passwordHash = await bcrypt.hash(userData.password, salt);
+        delete userData.password;
+      }
+
+      const newUser = new UserModel(userData);
+      return await newUser.save();
     } catch (error) {
       console.error("Error al crear usuario:", error);
       throw error;
@@ -105,6 +111,12 @@ class User  {
 
   patchUser = async (id, userData) => {
     try {
+      if (userData.password) {
+        const salt = await bcrypt.genSalt(10);
+        userData.passwordHash = await bcrypt.hash(userData.password, salt);
+        delete userData.password;
+      }
+
       const updatedUser = await UserModel.findByIdAndUpdate(
         id,
         { $set: userData },
@@ -119,6 +131,12 @@ class User  {
 
   putUser = async (id, userData) => {
     try {
+      if (userData.password) {
+        const salt = await bcrypt.genSalt(10);
+        userData.passwordHash = await bcrypt.hash(userData.password, salt);
+        delete userData.password;
+      }
+
       const updatedUser = await UserModel.findByIdAndUpdate(      
         id,
         { $set: userData },
@@ -140,6 +158,17 @@ class User  {
     }
   };
 
+  getUserByEmail = async (email) => {
+    try {
+        return await UserModel.findOne({ email });
+    } catch (error) {
+        console.error("Error buscando usuario por Email:", error);
+        return null;
+    }
+  };
+
+ 
 }
 
+export { UserModel };
 export default User;
