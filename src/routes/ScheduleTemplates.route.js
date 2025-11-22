@@ -13,7 +13,7 @@ class ScheduleTemplatesRoutes {
     this.router.get("/schedule-templates/doctor/:doctorId", this.controller.getScheduleTemplatesByDoctor);
     this.router.put("/schedule-templates/:id", validationMiddleware.validateId, this.controller.putScheduleTemplate);
     this.router.delete("/schedule-templates/:id", this.controller.deleteScheduleTemplate);
-    this.router.post("/schedule-templates", validationMiddleware.validateId, validationMiddleware.validateRequiredFields(["doctor", "daysOfWeek", "startTime", "endTime"]), this.controller.postScheduleTemplate);
+    this.router.post("/schedule-templates", validationMiddleware.validateId, validationMiddleware.validateRequiredFields(["doctor", "scheduledDate", "startTime", "endTime"]), this.controller.postScheduleTemplate);
     this.router.patch("/schedule-templates/:id", validationMiddleware.validateId, this.controller.patchScheduleTemplate);
     
 

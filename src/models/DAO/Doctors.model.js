@@ -36,11 +36,11 @@ const doctorsSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    scheduleTemplate: {
+    scheduleTemplate: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "ScheduleTemplateModel",
     default: null
-  }
+  }]
 })
 
 const DoctorModel = mongoose.model('DoctorModel', doctorsSchema)

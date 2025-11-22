@@ -26,7 +26,7 @@ const appointmentSchema = new mongoose.Schema({
     ],
     default: "LIBRE"
   },
-  createdAt: {
+  appointmentDate: {
     type: Date,
     default: null
   },

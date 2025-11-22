@@ -6,8 +6,8 @@ const scheduleTemplateSchema = new mongoose.Schema({
     ref: "DoctorModel",
     required: true
   },
-  daysOfWeek: {
-    type: [Number],
+  scheduledDate: {
+    type: Date,
     required: true
   },
   startTime: {
