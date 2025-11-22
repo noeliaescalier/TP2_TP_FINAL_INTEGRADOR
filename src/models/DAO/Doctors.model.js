@@ -157,6 +157,16 @@ class Doctor  {
     }
   };
 
+   getDoctorById = async (id) => {
+    try {
+      const doctor = await DoctorModel.findById(id); 
+      return doctor;
+    } catch (error) {
+      console.error("Error buscando doctor por ID:", error);
+      throw error;
+    }
+  };
+
 
 
 }

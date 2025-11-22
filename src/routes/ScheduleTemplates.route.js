@@ -15,7 +15,7 @@ class ScheduleTemplatesRoutes {
     this.router.delete("/schedule-templates/:id", this.controller.deleteScheduleTemplate);
     this.router.post("/schedule-templates", validationMiddleware.validateId, validationMiddleware.validateRequiredFields(["doctor", "daysOfWeek", "startTime", "endTime"]), this.controller.postScheduleTemplate);
     this.router.patch("/schedule-templates/:id", validationMiddleware.validateId, this.controller.patchScheduleTemplate);
-
+    
 
     return this.router;
   }

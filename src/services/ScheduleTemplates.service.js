@@ -22,6 +22,7 @@ class ScheduleTemplatesService {
   constructor(persistence = process.env.PERSISTENCE) {
     this.model = DaoFactory.get("ScheduleTemplate", persistence);
     this.appointmentModel = DaoFactory.get("Appointment", persistence);
+    this.doctorModel = DaoFactory.get("Doctor", persistence);
   }
 
   getScheduleTemplates = async () => {
@@ -29,8 +30,10 @@ class ScheduleTemplatesService {
     return templates;
   };
 
+
   createAppointmentsForSchedule = async (doctorId, startTime, endTime, slotDurationMin) => {
     const slots = generateTimeSlots(startTime, endTime, slotDurationMin);
+    console.log("Slots generados:", slots);
     const createdAppointments = [];
 
     for (const time of slots) {
@@ -49,10 +52,17 @@ class ScheduleTemplatesService {
     return createdAppointments;
   };
 
-  postScheduleTemplates = async (template) => {
-    const createdSchedule = await this.model.postScheduleTemplate(template);
 
-    const { doctor, startTime, endTime, slotDurationMin } = template;
+  postScheduleTemplate = async (template) => {
+    
+  const {doctor, startTime, endTime, slotDurationMin } = template;
+  const doctorData = await this.doctorModel.getDoctorById(doctor);
+
+  if (doctorData && doctorData.scheduleTemplate) {
+  throw new Error("El doctor ya tiene una agenda");
+  }
+
+  const createdSchedule = await this.model.postScheduleTemplate(template);
 
     if (doctor && startTime && endTime && slotDurationMin) {
       try {
@@ -70,6 +80,11 @@ class ScheduleTemplatesService {
             appointments: appointmentIds
           });
         }
+
+        await this.doctorModel.patchDoctor(doctor, {
+        scheduleTemplate: createdSchedule._id,
+        });
+
       } catch (err) {
         console.error("Error al crear los appointments para el schedule:", err);
       }
@@ -102,6 +117,7 @@ class ScheduleTemplatesService {
     const deletedScheduleTemplate = await this.model.deleteScheduleTemplate(id);
     return deletedScheduleTemplate;
   };
+
 }
 
 export default ScheduleTemplatesService;
