@@ -26,7 +26,7 @@ const appointmentSchema = new mongoose.Schema({
     ],
     default: "LIBRE"
   },
-  createdAt: {
+  appointmentDate: {
     type: Date,
     default: null
   },
@@ -135,6 +135,23 @@ class Appointment  {
     }
   };
 
+  cancelAppointmentsByIds = async (appointmentIds) => {
+  try {
+    const result = await AppointmentModel.updateMany(
+      { _id: { $in: appointmentIds } },
+      {
+        $set: {
+          status: "CANCELADO_MEDICO",
+          cancellationReason: "los turnos para este dia fueron cancelados, debido a que el doctor canceló su agenda para el dia"
+        }
+      }
+    );
+    return result;
+  } catch (error) {
+    console.error("Error al cancelar los appointments:", error);
+    throw error;
+  }
+};
 
 
 }

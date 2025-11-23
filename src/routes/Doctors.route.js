@@ -18,7 +18,7 @@ class DoctorsRoutes {
     this.router.delete("/doctors/:id", validationMiddleware.validateId, this.controller.deleteDoctors);
     this.router.patch("/doctors/:id", validationMiddleware.validateId, this.controller.patchDoctors);
     this.router.put("/doctors/:id", validationMiddleware.validateId, this.controller.putDoctors);
-
+    this.router.get("/doctors/:id", this.controller.getDoctorById);
     return this.router;
   }
 }

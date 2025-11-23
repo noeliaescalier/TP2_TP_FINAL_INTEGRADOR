@@ -41,11 +41,11 @@ const doctorsSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    scheduleTemplate: {
+    scheduleTemplate: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "ScheduleTemplateModel",
     default: null
-  }
+  }]
 })
 
 const DoctorModel = mongoose.model('DoctorModel', doctorsSchema)
@@ -158,6 +158,16 @@ class Doctor  {
       return updatedDoctor;
     } catch (error) {
       console.error("Error al reemplazar doctor:", error);
+      throw error;
+    }
+  };
+
+   getDoctorById = async (id) => {
+    try {
+      const doctor = await DoctorModel.findById(id); 
+      return doctor;
+    } catch (error) {
+      console.error("Error buscando doctor por ID:", error);
       throw error;
     }
   };
