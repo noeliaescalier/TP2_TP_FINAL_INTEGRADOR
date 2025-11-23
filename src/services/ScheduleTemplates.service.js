@@ -126,12 +126,24 @@ class ScheduleTemplatesService {
     return (createdSchedule);
   };
 
-
-
   patchScheduleTemplate = async (id, scheduleTemplateData) => {
-    const updatedScheduleTemplate = await this.model.patchScheduleTemplate(id, scheduleTemplateData);
-    return updatedScheduleTemplate;
-  };
+  const updatedScheduleTemplate = await this.model.patchScheduleTemplate(id, scheduleTemplateData);
+
+  if (
+    updatedScheduleTemplate &&
+    scheduleTemplateData.status === "INACTIVO" &&
+    Array.isArray(updatedScheduleTemplate.appointments) &&
+    updatedScheduleTemplate.appointments.length > 0
+  ) {
+    try {
+      await this.appointmentModel.cancelAppointmentsByIds(updatedScheduleTemplate.appointments);
+    } catch (error) {
+      console.error("Error al cancelar los turnos al desactivar la agenda:", error);
+    }
+  }
+
+  return updatedScheduleTemplate;
+};
 
   putScheduleTemplate = async (id, scheduleTemplateData) => {
     const updatedScheduleTemplate = await this.model.putScheduleTemplate(id, scheduleTemplateData);

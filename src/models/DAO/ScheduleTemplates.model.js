@@ -63,6 +63,7 @@ class ScheduleTemplate  {
     }
   };
 
+
     patchScheduleTemplate = async (id, stp) => {
     try {
       const updated = await ScheduleTemplateModel.findByIdAndUpdate(
