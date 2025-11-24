@@ -59,13 +59,13 @@ class Appointment  {
     }
   };
 
-  getAppointmentsCountByStatus = async (statusList) => {
+getAppointmentsCountByStatus = async (statusList) => {
     try {
         return await AppointmentModel.countDocuments({ 
         status: { $in: statusList } 
-      return await AppointmentModel.find({ status: "RESERVADO" });
+      });
     } catch (error) {
-      console.error("Error al obtener turnos reservados:", error);
+      console.error(`Error al contar turnos con status ${statusList}: `, error);
       throw error;
     }
   };
