@@ -10,11 +10,8 @@ class AppointmentsRoutes {
 
   start() {
     this.router.get("/appointments", this.controller.getAppointments);
-    this.router.get("/appointments/stats/dashboard", this.controller.getStats);
+    this.router.get("/appointments/stats/dashboard", this.controller.getAppointmentCountByStatus);
     this.router.post("/appointments", validationMiddleware.validateRequiredFields(["doctor", "patient", "time"]), this.controller.postAppointment);
-    this.router.get("/appointments/reserved", this.controller.getAppointmentsReserved);
-    this.router.get("/appointments/cancelled", this.controller.getAppointmentsCancelled);
-    this.router.get("/appointments/attended", this.controller.getAppointmentsAttended);
     this.router.patch("/appointments/:id", validationMiddleware.validateId, this.controller.patchAppointment);
     this.router.put("/appointments/:id", validationMiddleware.validateId, this.controller.putAppointment);
     this.router.delete("/appointments/:id", validationMiddleware.validateId, this.controller.deleteAppointment);

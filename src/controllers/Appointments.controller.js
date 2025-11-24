@@ -20,9 +20,9 @@ class AppointmentsController {
     }
   }
 
-  getStats = async (req, res) => {
+  getAppointmentCountByStatus = async (req, res) => {
     try {
-      const stats = await this.service.getAppointmentsStats();
+      const stats = await this.service.getAppointmentsCountByStatus();
       res.status(200).json({
         status: 'success',
         data: stats
@@ -35,50 +35,7 @@ class AppointmentsController {
     }
   }
 
-  getAppointmentsReserved = async (req, res) => {
-    try {
-      const appointments = await this.service.getAppointmentsReserved();
-      res.status(200).json({
-        status: 'success',
-        data: appointments
-      });
-    } catch (error) {
-      res.status(500).json({ 
-        status: 'error',
-        message: error.message 
-      });
-    }
-  }
-
-  getAppointmentsCancelled = async (req, res) => {
-    try {
-      const appointments = await this.service.getAppointmentsCancelled();
-      res.status(200).json({
-        status: 'success',
-        data: appointments
-      });
-    } catch (error) {
-      res.status(500).json({ 
-        status: 'error',
-        message: error.message 
-      });
-    }
-  } 
-
-  getAppointmentsAttended = async (req, res) => {
-    try {
-      const appointments = await this.service.getAppointmentsAttended();
-      res.status(200).json({
-        status: 'success',
-        data: appointments
-      });
-    } catch (error) {
-      res.status(500).json({ 
-        status: 'error',
-        message: error.message 
-      });
-    }
-  }
+ 
 
   postAppointment = async (req, res) => {
     try {
