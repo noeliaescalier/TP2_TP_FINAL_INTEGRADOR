@@ -1,6 +1,7 @@
 import express from "express";
 import AppointmentsController from "../controllers/Appointments.controller.js";
 import validationMiddleware from "../middleware/validation.middleware.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 
 class AppointmentsRoutes {
   constructor() {
@@ -9,6 +10,8 @@ class AppointmentsRoutes {
   }
 
   start() {
+    this.router.use(authMiddleware.requireAuth);
+
     this.router.get("/appointments", this.controller.getAppointments);
     this.router.get("/appointments/stats/dashboard", this.controller.getAppointmentCountByStatus);
     this.router.post("/appointments", validationMiddleware.validateRequiredFields(["doctor", "patient", "time"]), this.controller.postAppointment);

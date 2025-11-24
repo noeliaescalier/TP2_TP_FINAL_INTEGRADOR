@@ -1,6 +1,11 @@
 import mongoose from "mongoose"
 
 const doctorsSchema = mongoose.Schema({
+    user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+    },
     firstName : {
         type: String,
         required: true,
@@ -36,11 +41,11 @@ const doctorsSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    scheduleTemplate: {
+    scheduleTemplate: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "ScheduleTemplateModel",
     default: null
-  }
+  }]
 })
 
 const DoctorModel = mongoose.model('DoctorModel', doctorsSchema)
@@ -157,14 +162,16 @@ class Doctor  {
     }
   };
 
-  getDoctorById = async (id) => {
+   getDoctorById = async (id) => {
     try {
-      return await DoctorModel.findById(id);
+      const doctor = await DoctorModel.findById(id); 
+      return doctor;
     } catch (error) {
       console.error("Error buscando doctor por ID:", error);
-      return null;
+      throw error;
     }
   };
+
 
 
 }

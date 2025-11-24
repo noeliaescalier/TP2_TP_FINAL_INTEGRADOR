@@ -7,6 +7,22 @@ class AppointmentsController {
 
   getAppointments = async (req, res) => {
     try {
+      const { doctor, date } = req.query;
+
+      if (doctor || date) {
+        if (!doctor || !date) {
+          return res.status(400).json({ error: "Debe enviar doctor y date en formato YYYY-MM-DD" });
+        }
+
+        const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(date);
+        if (!isValidDate) {
+          return res.status(400).json({ error: "Fecha inválida. Use el formato YYYY-MM-DD" });
+        }
+
+        const appointments = await this.service.getAppointmentsByDoctorAndDate(doctor, date);
+        return res.status(200).json(appointments);
+      }
+
       const appointments = await this.service.getAppointments();
       res.status(200).json({
         status: 'success',

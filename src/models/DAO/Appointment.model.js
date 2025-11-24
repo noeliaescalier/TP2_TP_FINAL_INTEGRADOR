@@ -26,7 +26,7 @@ const appointmentSchema = new mongoose.Schema({
     ],
     default: "LIBRE"
   },
-  createdAt: {
+  appointmentDate: {
     type: Date,
     default: null
   },
@@ -63,9 +63,32 @@ class Appointment  {
     try {
         return await AppointmentModel.countDocuments({ 
         status: { $in: statusList } 
-      });
+      return await AppointmentModel.find({ status: "RESERVADO" });
     } catch (error) {
-      console.error(`Error al contar turnos con status ${statusList}:`, error);
+      console.error("Error al obtener turnos reservados:", error);
+      throw error;
+    }
+  };
+
+  getAppointmentsByDoctorAndDate = async (doctorId, dateString) => {
+    try {
+      const [year, month, day] = (dateString || "").split("-").map(Number);
+      if (!year || !month || !day) {
+        throw new Error("Fecha inválida, use el formato YYYY-MM-DD");
+      }
+
+      const startOfDay = new Date(year, month - 1, day);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(startOfDay);
+      endOfDay.setDate(endOfDay.getDate() + 1);
+
+      return await AppointmentModel.find({
+        doctor: doctorId,
+        appointmentDate: { $gte: startOfDay, $lt: endOfDay }
+      }).select("appointmentDate time status");
+    } catch (error) {
+      console.error("Error al obtener turnos por médico y fecha:", error);
       throw error;
     }
   };
@@ -115,6 +138,23 @@ class Appointment  {
     }
   };
 
+  cancelAppointmentsByIds = async (appointmentIds) => {
+  try {
+    const result = await AppointmentModel.updateMany(
+      { _id: { $in: appointmentIds } },
+      {
+        $set: {
+          status: "CANCELADO_MEDICO",
+          cancellationReason: "los turnos para este dia fueron cancelados, debido a que el doctor canceló su agenda para el dia"
+        }
+      }
+    );
+    return result;
+  } catch (error) {
+    console.error("Error al cancelar los appointments:", error);
+    throw error;
+  }
+};
 
 
 }

@@ -137,6 +137,12 @@ class User  {
     } catch (error) {
       console.error("Error buscando usuario por ID:", error);
       return null;
+  getUserByEmail = async (email) => {
+    try {
+      return await UserModel.findOne({ email });
+    } catch (error) {
+      console.error("Error al obtener usuario por email:", error);
+      throw error;
     }
   };
 
