@@ -8,18 +8,30 @@ class DoctorsController {
  getDoctors = async (req, res) => {
     try {
       const doctors = await this.service.getDoctors();
-      res.status(200).json(doctors);
+      res.status(200).json({
+        status: 'success',
+        data: doctors
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message 
+      });
     }
   }
 
   getDoctorsWithStats = async (req, res) => {
     try {
       const doctors = await this.service.getDoctorsWithStats();
-      res.status(200).json(doctors);
+      res.status(200).json({
+        status: 'success',
+        data: doctors
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message 
+      });
     }
   }
 
@@ -27,9 +39,15 @@ class DoctorsController {
     try {
       const doc = req.body;
       const data = await this.service.postDoctors(doc);
-      res.status(201).json(data);
+      res.status(201).json({
+        status: 'success',
+        data: data
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message 
+      });
     }
   }
 
@@ -38,12 +56,21 @@ class DoctorsController {
       const { id } = req.params;
       const result = await this.service.deleteDoctors(id);
       if (result) {
-        res.status(200).json({ message: "Doctor eliminado correctamente" });
+        res.status(200).json({ 
+          status: 'success',
+          message: 'Doctor deleted successfully' 
+        });
       } else {
-        res.status(404).json({ message: "Doctor no encontrado" });
+        res.status(404).json({ 
+          status: 'error',
+          message: 'Doctor not found'
+         });
       }
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message 
+      });
     }
   }
   
@@ -53,12 +80,21 @@ class DoctorsController {
       const docData = req.body;
       const updatedDoc = await this.service.patchDoctors(id, docData);
       if (updatedDoc) {
-        res.status(200).json(updatedDoc);
+        res.status(200).json({
+          status: 'success',
+          data: updatedDoc
+        });
       } else {
-        res.status(404).json({ message: "Doctor no encontrado" });
+        res.status(404).json({ 
+          status: 'error',
+          message: "Doctor no found"
+         });
       }
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
@@ -68,31 +104,46 @@ class DoctorsController {
       const docData = req.body;
       const updatedDoc = await this.service.putDoctors(id, docData);
       if (updatedDoc) {
-        res.status(200).json(updatedDoc);
+        res.status(200).json({
+          status: 'success',
+          data: updatedDoc
+        });
       } else {
-        res.status(404).json({ message: "Doctor no encontrado" });
+        res.status(404).json({ 
+          status: 'error',
+          message: "Doctor no found"
+         });
       }
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
-    getDoctorById = async (req, res) => {
+  getDoctorById = async (req, res) => {
     try {
       const { id } = req.params;
       const doctor = await this.service.getDoctorById(id);
-      res.status(200).json(doctor);
-    } catch (error) {
-      console.error("Error al obtener doctor por ID:", error);
-
-      if (error.message === "Doctor no encontrado") {
-        return res.status(404).send({ error: error.message });
+      if (doctor) {
+        res.status(200).json({
+          status: 'success',
+          data: doctor
+        });
+      } else {
+        res.status(404).json({ 
+          status: 'error',
+          message: "Doctor no found"
+         });
       }
-
-      res.status(500).send({ error: error.message });
+    } catch (error) {
+      res.status(500).send({ 
+        status: 'error',
+        message: error.message
+      });
     }
-  };
-
+  }
 
 }
 

@@ -131,6 +131,12 @@ class User  {
     }
   };
 
+  getUserById = async (id) => {
+    try {
+      return await UserModel.findById(id);
+    } catch (error) {
+      console.error("Error buscando usuario por ID:", error);
+      return null;
   getUserByEmail = async (email) => {
     try {
       return await UserModel.findOne({ email });

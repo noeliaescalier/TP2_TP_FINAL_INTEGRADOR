@@ -44,6 +44,8 @@ class UsersService {
     return updated;
   }
 
+  getUserById = async (id) => {
+    const user = await this.model.getUserById(id);
   getUserByEmail = async (email) => {
     const user = await this.model.getUserByEmail(email);
     return user;

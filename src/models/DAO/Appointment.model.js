@@ -59,8 +59,10 @@ class Appointment  {
     }
   };
 
-  getAppointmentsReserved = async () => {
+  getAppointmentsCountByStatus = async (statusList) => {
     try {
+        return await AppointmentModel.countDocuments({ 
+        status: { $in: statusList } 
       return await AppointmentModel.find({ status: "RESERVADO" });
     } catch (error) {
       console.error("Error al obtener turnos reservados:", error);
@@ -90,29 +92,7 @@ class Appointment  {
       throw error;
     }
   };
-
-
-  getAppointmentsCancelled = async () => {
-    try {
-      return await AppointmentModel.find({ 
-        status: { $in: ["CANCELADO_PACIENTE", "CANCELADO_MEDICO"] } 
-      });
-    } catch (error) {
-      console.error("Error al obtener turnos cancelados:", error);
-      throw error;
-    }
-  };
-
-  getAppointmentsAttended = async () => {
-    try {
-      return await AppointmentModel.find({ status: "ATENDIDO" });
-    } catch (error) {
-      console.error("Error al obtener turnos atendidos:", error);
-      throw error;
-    }
-  };
   
-
   postAppointment = async (appointmentData) => {
    try {
       const newAppointment = new AppointmentModel(appointmentData);

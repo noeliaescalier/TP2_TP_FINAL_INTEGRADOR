@@ -25,6 +25,7 @@ class UsersRoutes {
     this.router.delete("/users/:id", validationMiddleware.validateId, this.controller.deleteUsers);
     this.router.patch("/users/:id", validationMiddleware.validateId, this.controller.patchUsers);
     this.router.put("/users/:id", validationMiddleware.validateId, this.controller.putUsers);
+    this.router.get("/users/:id", validationMiddleware.validateId, this.controller.getUserById);
 
     return this.router;
   }

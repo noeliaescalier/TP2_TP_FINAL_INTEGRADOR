@@ -1,5 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express"
-import dotenv from 'dotenv'
 import { db } from './src/config/db.js'
 import cors from 'cors'
 import DoctorsRoutes from "./src/routes/Doctors.route.js"
@@ -9,8 +11,6 @@ import ScheduleTemplatesRoutes from "./src/routes/ScheduleTemplates.route.js"
 import AppointmentsRoutes from "./src/routes/Appointments.route.js"
 import swaggerUi from "swagger-ui-express"
 import swaggerDocs from "./docs/swagger.docs.js"
-
-dotenv.config()
 
 const app = express();
 const PORT = process.env.PORT || 8080;
