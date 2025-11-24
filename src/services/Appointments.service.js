@@ -10,6 +10,11 @@ class AppointmentsService {
     return appointments;
   }
 
+  getAppointmentsByDoctorAndDate = async (doctorId, date) => {
+    const appointments = await this.model.getAppointmentsByDoctorAndDate(doctorId, date);
+    return appointments;
+  }
+
   getAppointmentsStats = async () => {
     
     const [reserved, cancelled, attended] = await Promise.all([

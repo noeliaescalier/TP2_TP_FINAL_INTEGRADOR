@@ -68,6 +68,29 @@ class Appointment  {
     }
   };
 
+  getAppointmentsByDoctorAndDate = async (doctorId, dateString) => {
+    try {
+      const [year, month, day] = (dateString || "").split("-").map(Number);
+      if (!year || !month || !day) {
+        throw new Error("Fecha inválida, use el formato YYYY-MM-DD");
+      }
+
+      const startOfDay = new Date(year, month - 1, day);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(startOfDay);
+      endOfDay.setDate(endOfDay.getDate() + 1);
+
+      return await AppointmentModel.find({
+        doctor: doctorId,
+        appointmentDate: { $gte: startOfDay, $lt: endOfDay }
+      }).select("appointmentDate time status");
+    } catch (error) {
+      console.error("Error al obtener turnos por médico y fecha:", error);
+      throw error;
+    }
+  };
+
 
   getAppointmentsCancelled = async () => {
     try {

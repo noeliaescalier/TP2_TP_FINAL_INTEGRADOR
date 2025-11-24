@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": ".",
+    "start": "node .",
     "watch": "node --watch .",
     "test": "mocha \"test/**/*.spec.js\" --timeout 10000"
   },

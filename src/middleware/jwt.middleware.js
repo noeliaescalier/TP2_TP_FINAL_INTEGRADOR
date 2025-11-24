@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 
-// Solo con fines educativos: mover a .env
 const SECRET = process.env.JWT_SECRET;
 
 const generateToken = async (user) => {
@@ -10,7 +9,7 @@ const generateToken = async (user) => {
     role: user?.role,
   };
 
-  const token = await jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+  const token = await jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
   return token;
 };
 
