@@ -1,15 +1,15 @@
-# API Turnos Medicos
+# API Turnos Médicos
 
-API REST para gestion de turnos medicos, usuarios y doctores con autenticacion JWT.
+API REST para gestión de turnos médicos, usuarios y doctores con autenticación JWT.
 
-## Tecnologias
+## Tecnologías
 - Node.js + Express
 - MongoDB + Mongoose
-- Autenticacion JWT (`jsonwebtoken`) y hash de contrasena (`bcrypt`)
-- Swagger UI para documentacion (`/api/docs`)
-- Tests de integracion con Mocha, Chai y Supertest
+- Autenticación JWT (`jsonwebtoken`) y hash de contraseña (`bcrypt`)
+- Swagger UI para documentación (`/api/docs`)
+- Tests de integración con Mocha, Chai y Supertest
 
-## Librerias utilizadas
+## Librerías utilizadas
 - express (framework HTTP)
 - mongoose (ODM MongoDB)
 - dotenv (manejo de variables de entorno)
@@ -25,7 +25,7 @@ API REST para gestion de turnos medicos, usuarios y doctores con autenticacion J
 - Acceso a una base MongoDB
 
 ## Variables de entorno
-Crear un archivo `.env` en la raiz con:
+Crear un archivo `.env` en la raíz con:
 ```
 MONGO_URI=<completar con la cadena de conexion Mongo>
 PERSISTENCE=MongoDB
@@ -36,7 +36,7 @@ EMAIL_PASS=<completar con la password email>
 PORT=8080
 ```
 
-## Instalacion
+## Instalación
 ```
 npm install
 ```
@@ -47,13 +47,13 @@ npm start
 ```
 El servidor corre en `http://localhost:8080` (o el `PORT` definido en `.env`).
 
-## Documentacion de la API (Swagger)
+## Documentación de la API (Swagger)
 - UI: `http://localhost:8080/api/docs`
 - JSON: `http://localhost:8080/api/docs.json`
 Para probar endpoints protegidos, usar el boton **Authorize** con `Bearer <token>`.
 
 ## Formato de respuesta
-La mayoria de los endpoints protegidos responden con:
+La mayoría de los endpoints protegidos responden con:
 ```
 {
   status: "success" | "error",
@@ -70,7 +70,7 @@ Los listados devuelven el array dentro de `data`.
 - Turnos (Appointments): CRUD, listados y estadisticas protegidas.
 
 ## Tests
-Los tests son de integracion y esperan la API levantada en `http://localhost:8080`.
+Los tests son de integración y esperan la API levantada en `http://localhost:8080`.
 1) En una terminal: `npm start`
 2) En otra terminal: `npm test`
 
@@ -84,3 +84,11 @@ Todos bajo `/api`, ejemplo:
 - `POST /api/doctors` (requiere Bearer token, cuerpo incluye `user` vinculado al medico)
 - `GET /api/appointments` (requiere Bearer token)
 - `POST /api/appointments` (requiere Bearer token)
+
+## Usuarios de prueba
+- User: paciente@test.com
+  Password: password
+- User: medico@test.com
+  Password: password
+- User: admin@test.com
+  Password: password
