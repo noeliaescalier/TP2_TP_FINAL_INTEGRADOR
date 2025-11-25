@@ -33,6 +33,7 @@ FRONTEND_URL=http://localhost:5173
 JWT_SECRET=<completar con la clave secreta>
 EMAIL_USER=<completar con la user email>
 EMAIL_PASS=<completar con la password email>
+PORT=8080
 ```
 
 ## Instalacion
