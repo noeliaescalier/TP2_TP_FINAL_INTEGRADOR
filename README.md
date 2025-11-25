@@ -9,6 +9,17 @@ API REST para gestion de turnos medicos, usuarios y doctores con autenticacion J
 - Swagger UI para documentacion (`/api/docs`)
 - Tests de integracion con Mocha, Chai y Supertest
 
+## Librerias utilizadas
+- express (framework HTTP)
+- mongoose (ODM MongoDB)
+- dotenv (manejo de variables de entorno)
+- cors (CORS middleware)
+- jsonwebtoken (JWT)
+- bcrypt (hash de contraseñas)
+- nodemailer (envío de emails)
+- swagger-ui-express (UI de Swagger)
+- mocha, chai, supertest (testing)
+
 ## Requisitos previos
 - Node.js 18+
 - Acceso a una base MongoDB
@@ -20,7 +31,8 @@ MONGO_URI=<completar con la cadena de conexion Mongo>
 PERSISTENCE=MongoDB
 FRONTEND_URL=http://localhost:5173
 JWT_SECRET=<completar con la clave secreta>
-PORT=8080
+EMAIL_USER=<completar con la user email>
+EMAIL_PASS=<completar con la password email>
 ```
 
 ## Instalacion
