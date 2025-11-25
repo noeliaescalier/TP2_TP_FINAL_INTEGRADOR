@@ -1,6 +1,7 @@
 import express from "express";
 import ScheduleTemplatesController from "../controllers/ScheduleTemplates.controller.js";
 import validationMiddleware from "../middleware/validation.middleware.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 
 class ScheduleTemplatesRoutes {
   constructor() {
@@ -9,6 +10,8 @@ class ScheduleTemplatesRoutes {
   }
 
   start() {
+    this.router.use(authMiddleware.requireAuth);
+
     this.router.get("/schedule-templates", this.controller.getScheduleTemplates);
     this.router.get("/schedule-templates/doctor/:doctorId", this.controller.getScheduleTemplatesByDoctor);
     this.router.put("/schedule-templates/:id", validationMiddleware.validateId, this.controller.putScheduleTemplate);

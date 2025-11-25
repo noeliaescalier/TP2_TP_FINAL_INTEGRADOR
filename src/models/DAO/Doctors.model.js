@@ -1,6 +1,11 @@
 import mongoose from "mongoose"
 
 const doctorsSchema = mongoose.Schema({
+    user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+    },
     firstName : {
         type: String,
         required: true,
@@ -61,53 +66,69 @@ class Doctor  {
   };
 
   getDoctorsWithStats = async () => {
-    try {
-        const docs = await DoctorModel.find().populate({
-        path: 'scheduleTemplate',
-        populate: { path: 'appointments' }
-      });
-
-      const processedDoctors = docs.map(doc => {
-        const d = doc.toObject();
-        const template = d.scheduleTemplate;
-
-        let totalAppointments = 0;
-        let agendaStatus = "Sin agenda";
-
-        if (template) {
-          if (template.status === "INACTIVO") {
-            agendaStatus = "Inactiva";
-          } else {
-            const occupiedSlots = template.appointments.filter(
-              app => app.status !== "LIBRE"
-            );
-            totalAppointments = occupiedSlots.length;
-
+        try {
             
-            const hasFreeSlots = template.appointments.some(
-              app => app.status === "LIBRE"
-            );
-            
-           
-            agendaStatus = hasFreeSlots ? "Disponible" : "Completa";
-          }
+            const docs = await DoctorModel.find().populate({
+                path: 'scheduleTemplate',
+                populate: { path: 'appointments' }
+            });
+
+            const processedDoctors = docs.map(doc => {
+                const d = doc.toObject();
+                
+                
+                const templates = Array.isArray(d.scheduleTemplate) ? d.scheduleTemplate : [];
+
+                let totalAppointments = 0;
+                let hasActiveSchedule = false; 
+                let isAvailable = false;       
+
+                
+                templates.forEach(template => {
+                    
+                    if (template && template.status !== "INACTIVO") {
+                        hasActiveSchedule = true;
+
+                        
+                        const appointmentsList = Array.isArray(template.appointments) ? template.appointments : [];
+
+                       
+                        const occupiedInThisTemplate = appointmentsList.filter(app => app.status !== "LIBRE").length;
+                        totalAppointments += occupiedInThisTemplate;
+
+                       
+                        const hasFreeInThisTemplate = appointmentsList.some(app => app.status === "LIBRE");
+                        if (hasFreeInThisTemplate) {
+                            isAvailable = true;
+                        }
+                    }
+                });
+
+                
+                let agendaStatus = "Sin agenda";
+
+                if (hasActiveSchedule) {
+                    
+                    agendaStatus = isAvailable ? "Disponible" : "Completa";
+                } else if (templates.length > 0) {
+                   
+                    agendaStatus = "Inactiva";
+                }
+
+                return {
+                    ...d,
+                    totalAppointments,
+                    agendaStatus
+                };
+            });
+
+            return processedDoctors;
+
+        } catch (error) {
+            console.error("Error fetching doctors with stats:", error);
+            throw error;
         }
-
-      
-        return {
-          ...d,
-          totalAppointments, 
-          agendaStatus      
-        };
-      });
-
-      return processedDoctors;
-
-    } catch (error) {
-      console.error("Error fetching doctors with stats:", error);
-      throw error;
-    }
-  };
+    };
 
    postDoctor = async (doctorData) => {
     try {

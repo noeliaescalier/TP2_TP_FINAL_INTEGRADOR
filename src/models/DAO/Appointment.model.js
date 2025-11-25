@@ -59,37 +59,40 @@ class Appointment  {
     }
   };
 
-  getAppointmentsReserved = async () => {
+getAppointmentsCountByStatus = async (statusList) => {
     try {
-      return await AppointmentModel.find({ status: "RESERVADO" });
-    } catch (error) {
-      console.error("Error al obtener turnos reservados:", error);
-      throw error;
-    }
-  };
-
-
-  getAppointmentsCancelled = async () => {
-    try {
-      return await AppointmentModel.find({ 
-        status: { $in: ["CANCELADO_PACIENTE", "CANCELADO_MEDICO"] } 
+        return await AppointmentModel.countDocuments({ 
+        status: { $in: statusList } 
       });
     } catch (error) {
-      console.error("Error al obtener turnos cancelados:", error);
+      console.error(`Error al contar turnos con status ${statusList}: `, error);
       throw error;
     }
   };
 
-  getAppointmentsAttended = async () => {
+  getAppointmentsByDoctorAndDate = async (doctorId, dateString) => {
     try {
-      return await AppointmentModel.find({ status: "ATENDIDO" });
+      const [year, month, day] = (dateString || "").split("-").map(Number);
+      if (!year || !month || !day) {
+        throw new Error("Fecha inválida, use el formato YYYY-MM-DD");
+      }
+
+      const startOfDay = new Date(year, month - 1, day);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(startOfDay);
+      endOfDay.setDate(endOfDay.getDate() + 1);
+
+      return await AppointmentModel.find({
+        doctor: doctorId,
+        appointmentDate: { $gte: startOfDay, $lt: endOfDay }
+      }).select("appointmentDate time status");
     } catch (error) {
-      console.error("Error al obtener turnos atendidos:", error);
+      console.error("Error al obtener turnos por médico y fecha:", error);
       throw error;
     }
   };
   
-
   postAppointment = async (appointmentData) => {
    try {
       const newAppointment = new AppointmentModel(appointmentData);

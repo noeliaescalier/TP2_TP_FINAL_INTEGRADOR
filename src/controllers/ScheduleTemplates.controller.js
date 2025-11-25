@@ -8,9 +8,15 @@ class ScheduleTemplatesController {
  getScheduleTemplates = async (req, res) => {
     try {
       const scheduleTemplates = await this.service.getScheduleTemplates();
-      res.status(200).json(scheduleTemplates);
+      res.status(200).json({
+        status: 'success',
+        data: scheduleTemplates
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
@@ -18,9 +24,15 @@ class ScheduleTemplatesController {
     try {
       const scheduleTemplateData = req.body;
       const newScheduleTemplate = await this.service.postScheduleTemplate(scheduleTemplateData);
-      res.status(201).json(newScheduleTemplate);
+      res.status(201).json({
+        status: 'success',
+        data: newScheduleTemplate
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).send({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
@@ -29,9 +41,15 @@ class ScheduleTemplatesController {
       const { id } = req.params;
       const scheduleTemplateData = req.body;
       const updatedScheduleTemplate = await this.service.patchScheduleTemplate(id, scheduleTemplateData);
-      res.status(200).json(updatedScheduleTemplate);
+      res.status(200).json({
+        status: 'success',
+        data: updatedScheduleTemplate
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
@@ -39,9 +57,15 @@ class ScheduleTemplatesController {
     try {
       const { doctorId } = req.params;
       const scheduleTemplates = await this.service.getScheduleTemplatesByDoctor(doctorId);
-      res.status(200).json(scheduleTemplates);
+      res.status(200).json({
+        status: 'success',
+        data: scheduleTemplates
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
@@ -50,9 +74,15 @@ class ScheduleTemplatesController {
       const { id } = req.params;
       const scheduleTemplateData = req.body;
       const updatedScheduleTemplate = await this.service.putScheduleTemplate(id, scheduleTemplateData);
-      res.status(200).json(updatedScheduleTemplate);
+      res.status(200).json({
+        status: 'success',
+        data: updatedScheduleTemplate
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
@@ -60,9 +90,15 @@ class ScheduleTemplatesController {
     try {
       const { id } = req.params;
       const deletedScheduleTemplate = await this.service.deleteScheduleTemplate(id);
-      res.status(200).json(deletedScheduleTemplate);
+      res.status(200).json({
+        status: 'success',
+        data: deletedScheduleTemplate
+      });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ 
+        status: 'error',
+        message: error.message
+       });
     }
   }
 
