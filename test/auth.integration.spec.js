@@ -42,6 +42,9 @@ describe("Integración Auth y rutas protegidas", () => {
   it("GET /api/users 200 -> lista usuarios con token válido", async () => {
     const res = await api.get("/api/users").set("Authorization", `Bearer ${token}`);
     expect(res.status).to.equal(200);
-    expect(res.body).to.be.an("array");
+    expect(res.body).to.have.property("data");
+    expect(res.body.data).to.be.an("array");
+    const createdUser = res.body.data.find((u) => u.email === baseUser.email);
+    expect(createdUser).to.exist;
   });
 });

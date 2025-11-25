@@ -1,9 +1,9 @@
 const swaggerDocs = {
   openapi: "3.0.0",
   info: {
-    title: "API Turnos Médicos",
+    title: "API Turnos Medicos",
     version: "1.0.0",
-    description: "Documentación de la API de turnos, usuarios y doctores."
+    description: "Documentacion de la API de turnos, usuarios, doctores y agendas."
   },
   servers: [
     {
@@ -13,8 +13,8 @@ const swaggerDocs = {
   ],
   tags: [
     { name: "Auth", description: "Registro y login" },
-    { name: "Users", description: "Gestión de usuarios" },
-    { name: "Doctors", description: "Gestión de doctores" },
+    { name: "Users", description: "Gestion de usuarios" },
+    { name: "Doctors", description: "Gestion de doctores" },
     { name: "ScheduleTemplates", description: "Agendas" },
     { name: "Appointments", description: "Turnos" }
   ],
@@ -45,6 +45,7 @@ const swaggerDocs = {
         type: "object",
         properties: {
           _id: { type: "string" },
+          user: { type: "string" },
           firstName: { type: "string" },
           lastName: { type: "string" },
           specialty: { type: "string" },
@@ -52,7 +53,10 @@ const swaggerDocs = {
           neighborhood: { type: "string" },
           address: { type: "string" },
           phone: { type: "string" },
-          scheduleTemplate: { type: "string" }
+          scheduleTemplate: {
+            type: "array",
+            items: { type: "string" }
+          }
         }
       },
       Appointment: {
@@ -72,7 +76,7 @@ const swaggerDocs = {
               "ATENDIDO"
             ]
           },
-          createdAt: { type: "string", format: "date-time" },
+          appointmentDate: { type: "string", format: "date-time" },
           cancellationReason: { type: "string" }
         }
       },
@@ -81,35 +85,12 @@ const swaggerDocs = {
         properties: {
           _id: { type: "string" },
           doctor: { type: "string" },
-          daysOfWeek: {
-            type: "array",
-            items: { type: "string" }
-          },
+          scheduledDate: { type: "string", format: "date-time" },
           startTime: { type: "string" },
           endTime: { type: "string" },
-          status: { type: "string" }
-        }
-      },
-      NewAppointmentInput: {
-        type: "object",
-        required: ["doctor", "patient", "time"],
-        properties: {
-          doctor: { type: "string" },
-          patient: { type: "string" },
-          time: { type: "string", example: "10:00" }
-        }
-      },
-      NewDoctorInput: {
-        type: "object",
-        required: ["firstName", "lastName", "specialty", "province", "neighborhood", "address", "phone"],
-        properties: {
-          firstName: { type: "string" },
-          lastName: { type: "string" },
-          specialty: { type: "string" },
-          province: { type: "string" },
-          neighborhood: { type: "string" },
-          address: { type: "string" },
-          phone: { type: "string" }
+          slotDurationMin: { type: "number" },
+          status: { type: "string", enum: ["ACTIVO", "INACTIVO"] },
+          appointments: { type: "array", items: { type: "string" } }
         }
       },
       RegisterInput: {
@@ -131,6 +112,54 @@ const swaggerDocs = {
         properties: {
           email: { type: "string" },
           password: { type: "string" }
+        }
+      },
+      NewDoctorInput: {
+        type: "object",
+        required: ["user", "firstName", "lastName", "specialty", "province", "neighborhood", "address", "phone"],
+        properties: {
+          user: { type: "string", description: "Id de usuario con role MEDICO" },
+          firstName: { type: "string" },
+          lastName: { type: "string" },
+          specialty: { type: "string" },
+          province: { type: "string" },
+          neighborhood: { type: "string" },
+          address: { type: "string" },
+          phone: { type: "string" }
+        }
+      },
+      NewAppointmentInput: {
+        type: "object",
+        required: ["doctor", "patient", "time"],
+        properties: {
+          doctor: { type: "string" },
+          patient: { type: "string" },
+          time: { type: "string", example: "10:00" }
+        }
+      },
+      NewScheduleTemplateInput: {
+        type: "object",
+        required: ["doctor", "scheduledDate", "startTime", "endTime", "slotDurationMin"],
+        properties: {
+          doctor: { type: "string" },
+          scheduledDate: { type: "string", format: "date-time" },
+          startTime: { type: "string" },
+          endTime: { type: "string" },
+          slotDurationMin: { type: "number" }
+        }
+      },
+      SuccessListResponse: {
+        type: "object",
+        properties: {
+          status: { type: "string", example: "success" },
+          data: { type: "array", items: { type: "object" } }
+        }
+      },
+      SuccessObjectResponse: {
+        type: "object",
+        properties: {
+          status: { type: "string", example: "success" },
+          data: { type: "object" }
         }
       }
     }
@@ -197,7 +226,7 @@ const swaggerDocs = {
               }
             }
           },
-          "401": { description: "Credenciales inválidas" }
+          "401": { description: "Credenciales invalidas" }
         }
       }
     },
@@ -211,8 +240,11 @@ const swaggerDocs = {
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: { $ref: "#/components/schemas/User" }
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/User" } }
+                  }
                 }
               }
             }
@@ -231,7 +263,20 @@ const swaggerDocs = {
           }
         },
         responses: {
-          "201": { description: "Usuario creado" }
+          "201": {
+            description: "Usuario creado",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { $ref: "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -246,7 +291,10 @@ const swaggerDocs = {
               "application/json": {
                 schema: {
                   type: "object",
-                  properties: { newPatients: { type: "number" } }
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    newPatientsToday: { type: "number" }
+                  }
                 }
               }
             }
@@ -265,7 +313,10 @@ const swaggerDocs = {
               "application/json": {
                 schema: {
                   type: "object",
-                  properties: { totalPatients: { type: "number" } }
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    totalPatients: { type: "number" }
+                  }
                 }
               }
             }
@@ -274,6 +325,28 @@ const swaggerDocs = {
       }
     },
     "/api/users/{id}": {
+      get: {
+        tags: ["Users"],
+        summary: "Obtener usuario por id",
+        parameters: [{ in: "path", name: "id", required: true, schema: { type: "string" } }],
+        responses: {
+          "200": {
+            description: "Usuario encontrado",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { $ref: "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { description: "No encontrado" }
+        }
+      },
       delete: {
         tags: ["Users"],
         summary: "Eliminar usuario",
@@ -308,7 +381,17 @@ const swaggerDocs = {
         responses: {
           "200": {
             description: "Listado",
-            content: { "application/json": { schema: { type: "array", items: { $ref: "#/components/schemas/Doctor" } } } }
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/Doctor" } }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -319,17 +402,69 @@ const swaggerDocs = {
           required: true,
           content: { "application/json": { schema: { $ref: "#/components/schemas/NewDoctorInput" } } }
         },
-        responses: { "201": { description: "Doctor creado" } }
+        responses: {
+          "201": {
+            description: "Doctor creado",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { $ref: "#/components/schemas/Doctor" }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/doctors/stats": {
       get: {
         tags: ["Doctors"],
-        summary: "Doctores con estadísticas",
-        responses: { "200": { description: "OK" } }
+        summary: "Doctores con estadisticas",
+        responses: {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/Doctor" } }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/doctors/{id}": {
+      get: {
+        tags: ["Doctors"],
+        summary: "Obtener doctor por id",
+        parameters: [{ in: "path", name: "id", required: true, schema: { type: "string" } }],
+        responses: {
+          "200": {
+            description: "Doctor encontrado",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { $ref: "#/components/schemas/Doctor" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { description: "No encontrado" }
+        }
+      },
       delete: {
         tags: ["Doctors"],
         summary: "Eliminar doctor",
@@ -361,7 +496,22 @@ const swaggerDocs = {
       get: {
         tags: ["ScheduleTemplates"],
         summary: "Listar agendas",
-        responses: { "200": { description: "OK" } }
+        responses: {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/ScheduleTemplate" } }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       post: {
         tags: ["ScheduleTemplates"],
@@ -369,21 +519,25 @@ const swaggerDocs = {
         requestBody: {
           required: true,
           content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: ["doctor", "daysOfWeek", "startTime", "endTime"],
-                properties: {
-                  doctor: { type: "string" },
-                  daysOfWeek: { type: "array", items: { type: "string" } },
-                  startTime: { type: "string" },
-                  endTime: { type: "string" }
+            "application/json": { schema: { $ref: "#/components/schemas/NewScheduleTemplateInput" } }
+          }
+        },
+        responses: {
+          "201": {
+            description: "Agenda creada",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { $ref: "#/components/schemas/ScheduleTemplate" }
+                  }
                 }
               }
             }
           }
-        },
-        responses: { "201": { description: "Agenda creada" } }
+        }
       }
     },
     "/api/schedule-templates/doctor/{doctorId}": {
@@ -391,7 +545,22 @@ const swaggerDocs = {
         tags: ["ScheduleTemplates"],
         summary: "Obtener agendas de un doctor",
         parameters: [{ in: "path", name: "doctorId", required: true, schema: { type: "string" } }],
-        responses: { "200": { description: "OK" } }
+        responses: {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/ScheduleTemplate" } }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/schedule-templates/{id}": {
@@ -431,7 +600,13 @@ const swaggerDocs = {
             description: "Listado",
             content: {
               "application/json": {
-                schema: { type: "array", items: { $ref: "#/components/schemas/Appointment" } }
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { type: "array", items: { $ref: "#/components/schemas/Appointment" } }
+                  }
+                }
               }
             }
           }
@@ -444,35 +619,52 @@ const swaggerDocs = {
           required: true,
           content: { "application/json": { schema: { $ref: "#/components/schemas/NewAppointmentInput" } } }
         },
-        responses: { "201": { description: "Turno creado" } }
+        responses: {
+          "201": {
+            description: "Turno creado",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: { $ref: "#/components/schemas/Appointment" }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/appointments/stats/dashboard": {
       get: {
         tags: ["Appointments"],
-        summary: "Estadísticas de turnos",
-        responses: { "200": { description: "OK" } }
-      }
-    },
-    "/api/appointments/reserved": {
-      get: {
-        tags: ["Appointments"],
-        summary: "Turnos reservados",
-        responses: { "200": { description: "OK" } }
-      }
-    },
-    "/api/appointments/cancelled": {
-      get: {
-        tags: ["Appointments"],
-        summary: "Turnos cancelados",
-        responses: { "200": { description: "OK" } }
-      }
-    },
-    "/api/appointments/attended": {
-      get: {
-        tags: ["Appointments"],
-        summary: "Turnos atendidos",
-        responses: { "200": { description: "OK" } }
+        summary: "Estadisticas de turnos",
+        responses: {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: { type: "string", example: "success" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        patientsToday: { type: "number" },
+                        appointmentsCancelled: { type: "number" },
+                        patientsAttended: { type: "number" },
+                        totalSlots: { type: "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/appointments/{id}": {
