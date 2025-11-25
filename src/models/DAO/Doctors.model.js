@@ -74,7 +74,12 @@ class Doctor  {
 
       const processedDoctors = docs.map(doc => {
         const d = doc.toObject();
-        const template = d.scheduleTemplate;
+        const template = Array.isArray(d.scheduleTemplate)
+          ? d.scheduleTemplate[0]
+          : d.scheduleTemplate;
+        const appointments = Array.isArray(template?.appointments)
+          ? template.appointments
+          : [];
 
         let totalAppointments = 0;
         let agendaStatus = "Sin agenda";
@@ -83,18 +88,22 @@ class Doctor  {
           if (template.status === "INACTIVO") {
             agendaStatus = "Inactiva";
           } else {
-            const occupiedSlots = template.appointments.filter(
+            const occupiedSlots = appointments.filter(
               app => app.status !== "LIBRE"
             );
             totalAppointments = occupiedSlots.length;
 
             
-            const hasFreeSlots = template.appointments.some(
+            const hasFreeSlots = appointments.some(
               app => app.status === "LIBRE"
             );
             
            
-            agendaStatus = hasFreeSlots ? "Disponible" : "Completa";
+            agendaStatus = appointments.length === 0
+              ? "Sin turnos"
+              : hasFreeSlots
+              ? "Disponible"
+              : "Completa";
           }
         }
 
